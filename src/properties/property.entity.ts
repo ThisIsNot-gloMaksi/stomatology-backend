@@ -1,21 +1,21 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Product } from '../products/product.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Product} from '../products/product.entity';
+import {ApiProperty} from '@nestjs/swagger';
 
 @Entity()
 export class Property {
-  @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
+    @ApiProperty()
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @ApiProperty()
-  @Column()
-  name: string;
+    @ApiProperty()
+    @Column()
+    name: string;
 
-  @ApiProperty()
-  @Column('decimal')
-  price: number;
+    @ApiProperty()
+    @Column('decimal')
+    price: number;
 
-  @ManyToOne(() => Product, (product) => product.property)
-  product: Product;
+    @ManyToOne(() => Product, (product) => product.property)
+    product: Product;
 }

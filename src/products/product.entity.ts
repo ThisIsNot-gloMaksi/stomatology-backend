@@ -1,13 +1,7 @@
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Property } from '../properties/property.entity';
-import { Category } from '../categories/category.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import {Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn,} from 'typeorm';
+import {Property} from '../properties/property.entity';
+import {Category} from '../categories/category.entity';
+import {ApiProperty} from '@nestjs/swagger';
 
 @Entity()
 export class Product {

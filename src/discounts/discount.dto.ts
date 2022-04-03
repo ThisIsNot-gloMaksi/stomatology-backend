@@ -1,26 +1,27 @@
-import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
-import { PartialType } from '@nestjs/swagger';
+import {IsDate, IsNotEmpty, IsString, IsUrl} from 'class-validator';
+import {PartialType} from '@nestjs/swagger';
 
 export class CreateDiscountDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+    @IsString()
+    @IsNotEmpty()
+    name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  description: string;
+    @IsString()
+    @IsNotEmpty()
+    description: string;
 
-  @IsDate()
-  @IsNotEmpty()
-  startDiscount: Date;
+    @IsDate()
+    @IsNotEmpty()
+    startDiscount: Date;
 
-  @IsDate()
-  @IsNotEmpty()
-  endDiscount: Date;
+    @IsDate()
+    @IsNotEmpty()
+    endDiscount: Date;
 
-  @IsUrl()
-  @IsNotEmpty()
-  imageUrl: string;
+    @IsUrl()
+    @IsNotEmpty()
+    imageUrl: string;
 }
 
-export class UpdateDiscountDto extends PartialType(CreateDiscountDto) {}
+export class UpdateDiscountDto extends PartialType(CreateDiscountDto) {
+}
