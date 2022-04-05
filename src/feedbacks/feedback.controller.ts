@@ -24,6 +24,7 @@ export class FeedbackController {
         return this.feedbackService.getFeedbackById(id);
     }
 
+
     @Post()
     @ApiBody({description: 'Отзыв', type: CreateFeedbackDto})
     @ApiCreatedResponse({type: Feedback, description: 'Отзыв'})

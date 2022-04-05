@@ -14,23 +14,25 @@ export class DiscountService {
     ) {
     }
 
-    createDiscount(dto: CreateDiscountDto): Promise<Discount> {
-        return this.discountRepository.save(dto);
+    async createDiscount(dto: CreateDiscountDto): Promise<Discount> {
+        return await this.discountRepository.save(dto);
     }
 
-    deleteDiscountById(id: number): Promise<DeleteResult> {
-        return this.discountRepository.delete(id);
+    async deleteDiscountById(id: number): Promise<DeleteResult> {
+        return await this.discountRepository.delete(id);
     }
 
-    getDiscountById(id: number): Promise<Discount> {
-        return this.controllerExceptions.notUndefinedPromise(this.discountRepository.findOne(id), 'discount');
+    async getDiscountById(id: number): Promise<Discount> {
+        return this.controllerExceptions.notUndefinedItem(await this.discountRepository
+            .findOne(id), 'discount');
     }
 
-    getDiscounts(): Promise<Discount[]> {
-        return this.controllerExceptions.notUndefinedPromise(this.discountRepository.find(), 'discounts');
+    async getDiscounts(): Promise<Discount[]> {
+        return this.controllerExceptions.notUndefinedItem(await this.discountRepository
+            .find(), 'discounts');
     }
 
-    update(id: number, dto: UpdateDiscountDto): Promise<UpdateResult> {
-        return this.discountRepository.update(id, dto);
+    async update(id: number, dto: UpdateDiscountDto): Promise<UpdateResult> {
+        return await this.discountRepository.update(id, dto);
     }
 }

@@ -15,23 +15,22 @@ export class ProductService {
     ) {
     }
 
-    getSimpleProduct() {
+    async getSimpleProduct() {
         const result = this.productRepository.find();
-        this.controllerExceptions.notUndefinedPromise(result, 'products');
-        return result.then((productList) => {
-            return productList.map((it) => {
-                return {
-                    id: it.id,
-                    name: it.name,
-                    article: it.articleNumber,
-                };
-            });
+        const productList: Product[] = await this.controllerExceptions
+            .notUndefinedItem(result, 'products');
+        return productList.map((it) => {
+            return {
+                id: it.id,
+                name: it.name,
+                article: it.articleNumber,
+            };
         });
     }
 
-    getProductById(id: number): Promise<Product> {
-        return this.controllerExceptions.notUndefinedPromise(
-            this.productRepository
+    async getProductById(id: number): Promise<Product> {
+        return this.controllerExceptions.notUndefinedItem(
+            await this.productRepository
                 .createQueryBuilder('product')
                 .leftJoinAndSelect('product.property', 'p')
                 .where('product.id=:id', {id: id})
@@ -41,15 +40,15 @@ export class ProductService {
     }
 
 
-    createProduct(product: CreateProductDto): Promise<Product> {
-        return this.productRepository.save(product);
+    async createProduct(product: CreateProductDto): Promise<Product> {
+        return await this.productRepository.save(product);
     }
 
-    updateProductById(id: number, product: UpdateProductDto): Promise<UpdateResult> {
-        return this.productRepository.update(id, product);
+    async updateProductById(id: number, product: UpdateProductDto): Promise<UpdateResult> {
+        return await this.productRepository.update(id, product);
     }
 
-    deleteProductById(id: number): Promise<DeleteResult> {
-        return this.productRepository.delete(id);
+    async deleteProductById(id: number): Promise<DeleteResult> {
+        return await this.productRepository.delete(id);
     }
 }

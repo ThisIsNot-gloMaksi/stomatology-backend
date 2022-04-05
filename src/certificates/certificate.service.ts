@@ -5,6 +5,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Certificate} from './certificate.entity';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 import {ControllerExceptions} from "../valid/controller.valid";
+import {Specialist} from "../specialists/specialist.entity";
 
 @Injectable()
 export class CertificateService {
@@ -16,32 +17,31 @@ export class CertificateService {
     ) {
     }
 
-    getCertificate(certificateId: number): Promise<Certificate> {
+    async getCertificate(certificateId: number): Promise<Certificate> {
         return this.controllerExceptions
-            .notUndefinedPromise(this.certificateRepository.findOne(certificateId), 'certificate');
+            .notUndefinedItem(await this.certificateRepository.findOne(certificateId), 'certificate');
     }
 
-    getCertificates(specialistId: number): Promise<Certificate[]> {
-        return this.controllerExceptions.notUndefinedPromise(
-            this.specialistService
+    async getCertificates(specialistId: number): Promise<Certificate[]> {
+        return this.controllerExceptions.notUndefinedItem(
+            await this.specialistService
                 .getSpecialistById(specialistId)
                 .then((it) => it.certificates), 'certificates');
     }
 
-    createCertificate(specialistId: number, createDto: CreateCertificateDto): Promise<Certificate> {
-        const specialist = this.specialistService.getSpecialistById(specialistId);
-        const certificate = this.certificateRepository.create(createDto);
-        return specialist.then((it) => {
-            certificate.specialist = it;
-            return this.certificateRepository.save(certificate);
-        });
+    async createCertificate(specialistId: number, createDto: CreateCertificateDto): Promise<Certificate> {
+        const specialist: Specialist = await this.specialistService.getSpecialistById(specialistId);
+        const certificate: Certificate = await this.certificateRepository.create(createDto);
+        certificate.specialist = specialist;
+        return this.certificateRepository.save(certificate);
+
     }
 
-    updateCertificate(certificateId: number, updateDto: UpdateCertificateDto): Promise<UpdateResult> {
-        return this.certificateRepository.update(certificateId, updateDto);
+    async updateCertificate(certificateId: number, updateDto: UpdateCertificateDto): Promise<UpdateResult> {
+        return await this.certificateRepository.update(certificateId, updateDto);
     }
 
-    deleteCertificate(certificateId: number): Promise<DeleteResult> {
-        return this.certificateRepository.delete(certificateId);
+    async deleteCertificate(certificateId: number): Promise<DeleteResult> {
+        return await this.certificateRepository.delete(certificateId);
     }
 }

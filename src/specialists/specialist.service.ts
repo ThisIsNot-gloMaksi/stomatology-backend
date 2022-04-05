@@ -14,40 +14,39 @@ export class SpecialistService {
     ) {
     }
 
-    getSimpleVersionSpecialists() {
-        const result = this.specialistRepository.find();
-        this.controllerExceptions.notUndefinedPromise(result, 'specialists')
-        return result.then((productList) => {
-            return productList.map((it) => {
-                return {
-                    id: it.id,
-                    name: it.name,
-                    specialization: it.specialization,
-                };
-            });
+    async getSimpleVersionSpecialists() {
+        const result = await this.specialistRepository.find();
+        this.controllerExceptions.notUndefinedItem(result, 'specialists');
+
+        return result.map((it) => {
+            return {
+                id: it.id,
+                name: it.name,
+                specialization: it.specialization,
+            };
         });
     }
 
-    getSpecialistById(id: number): Promise<Specialist> {
-        return this.controllerExceptions.notUndefinedPromise(
-            this.specialistRepository
-                .createQueryBuilder('specialist')
-                .leftJoinAndSelect('specialist.certificates', 's')
-                .where('specialist.id=:id', {id: id})
-                .getOne(),
-            'specialist'
-        );
+    async getSpecialistById(id: number): Promise<Specialist> {
+        const specialist: Specialist = await this.specialistRepository
+            .createQueryBuilder('specialist')
+            .leftJoinAndSelect('specialist.certificates', 's')
+            .where('specialist.id=:id', {id: id})
+            .getOne()
+
+        return this.controllerExceptions
+            .notUndefinedItem(specialist, 'specialist');
     }
 
-    createSpecialist(dto: CreateSpecialistDto) {
-        return this.specialistRepository.save(dto);
+    async createSpecialist(dto: CreateSpecialistDto) {
+        return await this.specialistRepository.save(dto);
     }
 
-    updateSpecialistById(id: number, updateDto: UpdateSpecialistDto) {
+    async updateSpecialistById(id: number, updateDto: UpdateSpecialistDto) {
         return this.specialistRepository.update(id, updateDto);
     }
 
-    deleteSpecialistById(id: number) {
+    async deleteSpecialistById(id: number) {
         return this.specialistRepository.delete(id);
     }
 }

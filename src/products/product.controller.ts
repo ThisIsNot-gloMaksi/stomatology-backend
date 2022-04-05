@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards,} from '@nestjs/common';
 import {CreateProductDto, SimpleProductDto, UpdateProductDto,} from './product.dto';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Product} from './product.entity';
 import {ProductService} from './product.service';
 import {DeleteDto, UpdateDto} from "../utils/result.dto";
+import {JwtAuthGuard} from "../auth/guard/jwt.guard";
 
 
 @Controller('api/v1/products')
@@ -29,6 +30,7 @@ export class ProductController {
         return this.productService.getProductById(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @ApiBody({type: CreateProductDto, description: 'услуга'})
     @ApiCreatedResponse({type: Product, description: 'услуга'})
     @Post()
@@ -36,11 +38,11 @@ export class ProductController {
         return this.productService.createProduct(product);
     }
 
-
+    @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id услуги'})
     @ApiBody({type: CreateProductDto, description: 'услуга'})
     @ApiCreatedResponse({type: UpdateDto, description: 'результат обновления'})
-    @Put(':id')
+    @Patch(':id')
     updateProductById(
         @Param('id', ParseIntPipe) id: number,
         @Body() product: UpdateProductDto,
@@ -48,6 +50,7 @@ export class ProductController {
         return this.productService.updateProductById(id, product);
     }
 
+    @UseGuards(JwtAuthGuard)
     @ApiCreatedResponse({type: DeleteDto, description: 'результат удаления'})
     @Delete(':id')
     deleteProductById(@Param('id', ParseIntPipe) id: number) {

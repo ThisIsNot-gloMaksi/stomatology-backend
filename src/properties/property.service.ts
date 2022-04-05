@@ -16,34 +16,33 @@ export class PropertyService {
     ) {
     }
 
-    getPropertiesByProductId(productId: number) {
-        return this.controllerExceptions.notUndefinedPromise(
-            this.productService
-                .getProductById(productId)
-                .then((it) => it.property),
+    async getPropertiesByProductId(productId: number) {
+        return this.controllerExceptions.notUndefinedItem(
+            await this.productService
+                .getProductById(productId),
             'properties'
         );
     }
 
-    getPropertyById(id: number) {
-        return this.controllerExceptions.notUndefinedPromise(this.propertyRepository.findOne(id),
-            'property');
+    async getPropertyById(id: number): Promise<Property> {
+        return this.controllerExceptions
+            .notUndefinedItem(
+                await this.propertyRepository.findOne(id),
+                'property');
     }
 
-    createPropertyByProductId(productId: number, createDto: CreatePropertyDto) {
-        const product = this.productService.getProductById(productId);
-        const property = this.propertyRepository.create(createDto);
-        return product.then((it) => {
-            property.product = it;
-            return this.propertyRepository.save(property);
-        });
+    async createPropertyByProductId(productId: number, createDto: CreatePropertyDto) {
+        const product = await this.productService.getProductById(productId);
+        const property = await this.propertyRepository.create(createDto);
+        property.product = product;
+        return await this.propertyRepository.save(property);
     }
 
-    updateProperty(id: number, updateDto: UpdatePropertyDto) {
-        return this.propertyRepository.update(id, updateDto);
+    async updateProperty(id: number, updateDto: UpdatePropertyDto) {
+        return await this.propertyRepository.update(id, updateDto);
     }
 
-    deleteProperty(id: number) {
-        this.propertyRepository.delete(id);
+    async deleteProperty(id: number) {
+        return await this.propertyRepository.delete(id);
     }
 }

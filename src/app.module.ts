@@ -10,9 +10,13 @@ import {Property} from './properties/property.entity';
 import {SpecialistModule} from './specialists/specialist.module';
 import {Specialist} from './specialists/specialist.entity';
 import {Certificate} from './certificates/certificate.entity';
-import {CerificateModule} from './certificates/cerificate.module';
+import {CertificateModule} from './certificates/certificate.module';
 
 import {PropertyModule} from './properties/property.module';
+import {AuthModule} from "./auth/auth.module";
+import {UserModule} from "./users/user.module";
+import {ConfigModule} from "@nestjs/config";
+import {User} from "./users/user.entity";
 
 @Module({
     imports: [
@@ -20,8 +24,11 @@ import {PropertyModule} from './properties/property.module';
         DiscountModule,
         ProductModule,
         SpecialistModule,
-        CerificateModule,
+        CertificateModule,
         PropertyModule,
+        AuthModule,
+        UserModule,
+        ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
             type: 'postgres',
             host: 'localhost',
@@ -36,6 +43,7 @@ import {PropertyModule} from './properties/property.module';
                 Property,
                 Specialist,
                 Certificate,
+                User
             ],
             synchronize: true,
         }),

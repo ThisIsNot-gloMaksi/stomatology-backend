@@ -11,5 +11,5 @@ import {ControllerExceptions} from "../valid/controller.valid";
     providers: [CertificateService, ControllerExceptions],
     controllers: [CertificateController],
 })
-export class CerificateModule {
+export class CertificateModule {
 }

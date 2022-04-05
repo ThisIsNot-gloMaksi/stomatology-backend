@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards,} from '@nestjs/common';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {CreatePropertyDto, UpdatePropertyDto} from './property.dto';
 import {PropertyService} from './property.service';
 import {Property} from './property.entity';
 import {UpdateDto} from "../utils/result.dto";
+import {JwtAuthGuard} from "../auth/guard/jwt.guard";
 
 @Controller('api/v1/properties')
 @ApiTags('properties')
@@ -29,6 +30,7 @@ export class PropertyController {
         return this.propertyService.getPropertyById(id);
     }
 
+    @UseGuards(JwtAuthGuard)
     @ApiQuery({name: 'productId', description: 'id продукта'})
     @ApiBody({type: CreatePropertyDto})
     @ApiCreatedResponse({type: Property, description: 'свойство'})
@@ -40,10 +42,11 @@ export class PropertyController {
         return this.propertyService.createPropertyByProductId(productId, createDto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id свойства'})
     @ApiBody({type: CreatePropertyDto, description: 'свойство'})
     @ApiCreatedResponse({type: UpdateDto, description: 'результат обновления'})
-    @Put(':id')
+    @Patch(':id')
     updateProperty(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateDto: UpdatePropertyDto,
@@ -51,6 +54,7 @@ export class PropertyController {
         return this.propertyService.updateProperty(id, updateDto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id свойства'})
     @ApiCreatedResponse({type: UpdateDto, description: 'результат удаления'})
     @Delete(':id')
