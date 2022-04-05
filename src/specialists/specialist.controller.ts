@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, Param, Post, Put,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put,} from '@nestjs/common';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {SpecialistService} from './specialist.service';
 import {CreateSpecialistDto, SimpleSpecialistDto, UpdateSpecialistDto,} from './specialist.dto';
 import {Specialist} from './specialist.entity';
+import {UpdateDto} from "../utils/result.dto";
 
 @Controller('api/v1/specialists')
 @ApiTags('specialists')
@@ -23,7 +24,7 @@ export class SpecialistController {
     @ApiParam({name: 'id', description: 'id специалиста'})
     @ApiCreatedResponse({type: Specialist, description: 'Специалист'})
     @Get(':id')
-    getSpecialistById(@Param('id') id: number) {
+    getSpecialistById(@Param('id', ParseIntPipe) id: number) {
         return this.specialistService.getSpecialistById(id);
     }
 
@@ -36,10 +37,10 @@ export class SpecialistController {
 
     @ApiParam({name: 'id', description: 'id специалиста'})
     @ApiBody({type: CreateSpecialistDto, description: 'Специалист'})
-    @ApiCreatedResponse({type: Specialist, description: 'Специалист'})
+    @ApiCreatedResponse({type: UpdateDto, description: 'Результат обновления'})
     @Put(':id')
     updateSpecialistById(
-        @Param('id') id,
+        @Param('id', ParseIntPipe) id,
         @Body() updateDto: UpdateSpecialistDto,
     ) {
         return this.specialistService.updateSpecialistById(id, updateDto);
@@ -47,8 +48,9 @@ export class SpecialistController {
 
     @ApiParam({name: 'id', description: 'id специалиста'})
     @ApiCreatedResponse({type: Specialist, description: 'Специалист'})
+    @ApiCreatedResponse({type: UpdateDto, description: 'Результат удаления'})
     @Delete(':id')
-    deleteSpecialistById(@Param(':id') id: number) {
+    deleteSpecialistById(@Param('id', ParseIntPipe) id: number) {
         return this.specialistService.deleteSpecialistById(id);
     }
 }

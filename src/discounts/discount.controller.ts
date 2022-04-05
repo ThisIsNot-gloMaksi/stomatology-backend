@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, Param, Post, Put,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put,} from '@nestjs/common';
 import {DiscountService} from './discount.service';
 import {CreateDiscountDto, UpdateDiscountDto} from './discount.dto';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Discount} from './discount.entity';
+import {DeleteDto, UpdateDto} from "../utils/result.dto";
 
 @Controller('api/v1/discounts')
 @ApiTags('discounts')
@@ -19,7 +20,7 @@ export class DiscountController {
     @ApiParam({name: 'id', description: 'id акции'})
     @ApiCreatedResponse({type: Discount, description: 'акции'})
     @Get(':id')
-    getDiscountById(@Param() id: number) {
+    getDiscountById(@Param('id', ParseIntPipe) id: number) {
         return this.discountService.getDiscountById(id);
     }
 
@@ -31,15 +32,16 @@ export class DiscountController {
     }
 
     @ApiBody({type: UpdateDiscountDto, description: 'акция'})
-    @ApiCreatedResponse({type: Discount, isArray: true, description: 'акции'})
+    @ApiCreatedResponse({type: UpdateDto, isArray: true, description: 'результат обновления'})
     @Put(':id')
-    update(@Param() id: number, @Body() dto: UpdateDiscountDto) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateDiscountDto) {
         return this.discountService.update(id, dto);
     }
 
     @ApiParam({name: 'id', description: 'id акции'})
+    @ApiCreatedResponse({type: DeleteDto, isArray: true, description: 'результат удаления'})
     @Delete(':id')
-    deleteDiscountById(id: number) {
-        this.discountService.deleteDiscountById(id);
+    deleteDiscountById(@Param('id', ParseIntPipe) id: number) {
+        return this.discountService.deleteDiscountById(id);
     }
 }

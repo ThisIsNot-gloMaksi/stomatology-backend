@@ -1,25 +1,30 @@
 import {IsDate, IsNotEmpty, IsString, IsUrl} from 'class-validator';
-import {PartialType} from '@nestjs/swagger';
+import {ApiProperty, PartialType} from '@nestjs/swagger';
+import {Type} from "class-transformer";
 
 export class CreateDiscountDto {
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     name: string;
 
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     description: string;
 
+    @ApiProperty()
     @IsDate()
-    @IsNotEmpty()
+    @Type(() => Date)
     startDiscount: Date;
 
+    @ApiProperty()
     @IsDate()
-    @IsNotEmpty()
+    @Type(() => Date)
     endDiscount: Date;
 
+    @ApiProperty()
     @IsUrl()
-    @IsNotEmpty()
     imageUrl: string;
 }
 

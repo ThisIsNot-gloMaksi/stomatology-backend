@@ -3,7 +3,8 @@ import {CreateCertificateDto, UpdateCertificateDto} from './certificate.dto';
 import {SpecialistService} from '../specialists/specialist.service';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Certificate} from './certificate.entity';
-import {Repository} from 'typeorm';
+import {DeleteResult, Repository, UpdateResult} from 'typeorm';
+import {ControllerExceptions} from "../valid/controller.valid";
 
 @Injectable()
 export class CertificateService {
@@ -11,20 +12,23 @@ export class CertificateService {
         private readonly specialistService: SpecialistService,
         @InjectRepository(Certificate)
         private readonly certificateRepository: Repository<Certificate>,
+        private readonly controllerExceptions: ControllerExceptions
     ) {
     }
 
-    getCertificate(certificateId: number) {
-        return this.certificateRepository.findOne(certificateId);
+    getCertificate(certificateId: number): Promise<Certificate> {
+        return this.controllerExceptions
+            .notUndefinedPromise(this.certificateRepository.findOne(certificateId), 'certificate');
     }
 
     getCertificates(specialistId: number): Promise<Certificate[]> {
-        return this.specialistService
-            .getSpecialistById(specialistId)
-            .then((it) => it.certificates);
+        return this.controllerExceptions.notUndefinedPromise(
+            this.specialistService
+                .getSpecialistById(specialistId)
+                .then((it) => it.certificates), 'certificates');
     }
 
-    createCertificate(specialistId: number, createDto: CreateCertificateDto) {
+    createCertificate(specialistId: number, createDto: CreateCertificateDto): Promise<Certificate> {
         const specialist = this.specialistService.getSpecialistById(specialistId);
         const certificate = this.certificateRepository.create(createDto);
         return specialist.then((it) => {
@@ -33,11 +37,11 @@ export class CertificateService {
         });
     }
 
-    updateCertificate(certificateId: number, updateDto: UpdateCertificateDto) {
+    updateCertificate(certificateId: number, updateDto: UpdateCertificateDto): Promise<UpdateResult> {
         return this.certificateRepository.update(certificateId, updateDto);
     }
 
-    deleteCertificate(certificateId: number) {
-        this.certificateRepository.delete(certificateId);
+    deleteCertificate(certificateId: number): Promise<DeleteResult> {
+        return this.certificateRepository.delete(certificateId);
     }
 }

@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query,} from '@nestjs/common';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {CreatePropertyDto, UpdatePropertyDto} from './property.dto';
 import {PropertyService} from './property.service';
 import {Property} from './property.entity';
+import {UpdateDto} from "../utils/result.dto";
 
 @Controller('api/v1/properties')
 @ApiTags('properties')
@@ -17,14 +18,14 @@ export class PropertyController {
         description: 'свойства',
     })
     @Get()
-    getPropertiesByIdProduct(@Query('idProduct') productId: number) {
+    getPropertiesByIdProduct(@Query('idProduct', ParseIntPipe) productId: number) {
         return this.propertyService.getPropertiesByProductId(productId);
     }
 
     @ApiParam({name: 'id', description: 'id свойства'})
     @ApiCreatedResponse({type: Property, description: 'свойство'})
     @Get(':id')
-    getPropertyById(@Param('id') id: number) {
+    getPropertyById(@Param('id', ParseIntPipe) id: number) {
         return this.propertyService.getPropertyById(id);
     }
 
@@ -41,18 +42,19 @@ export class PropertyController {
 
     @ApiParam({name: 'id', description: 'id свойства'})
     @ApiBody({type: CreatePropertyDto, description: 'свойство'})
-    @ApiCreatedResponse({type: Property, description: 'свойство'})
+    @ApiCreatedResponse({type: UpdateDto, description: 'результат обновления'})
     @Put(':id')
     updateProperty(
-        @Param('id') id: number,
+        @Param('id', ParseIntPipe) id: number,
         @Body() updateDto: UpdatePropertyDto,
     ) {
         return this.propertyService.updateProperty(id, updateDto);
     }
 
     @ApiParam({name: 'id', description: 'id свойства'})
+    @ApiCreatedResponse({type: UpdateDto, description: 'результат удаления'})
     @Delete(':id')
-    deleteProperty(@Param('id') id: number) {
+    deleteProperty(@Param('id', ParseIntPipe) id: number) {
         this.propertyService.deleteProperty(id);
     }
 }

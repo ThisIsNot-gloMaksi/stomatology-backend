@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, Query,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query,} from '@nestjs/common';
 import {CreateCertificateDto, UpdateCertificateDto} from './certificate.dto';
 import {CertificateService} from './certificate.service';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {Certificate} from './certificate.entity';
+import {DeleteDto, UpdateDto} from "../utils/result.dto";
 
 @ApiTags('certificates')
 @Controller('api/v1/certificates')
@@ -16,8 +17,9 @@ export class CertificateController {
         isArray: true,
         description: 'сертификат',
     })
+
     @Get()
-    getCertificates(@Query('specialistId') specialistId: number) {
+    getCertificates(@Query('specialistId', ParseIntPipe) specialistId: number) {
         return this.certificateService.getCertificates(specialistId);
     }
 
@@ -26,7 +28,7 @@ export class CertificateController {
     @ApiCreatedResponse({type: Certificate, description: 'Сертификат'})
     @Post()
     createCertificate(
-        @Query('specialistId') specialistId: number,
+        @Query('specialistId', ParseIntPipe) specialistId: number,
         @Body() createDto: CreateCertificateDto,
     ) {
         return this.certificateService.createCertificate(specialistId, createDto);
@@ -34,18 +36,19 @@ export class CertificateController {
 
     @ApiParam({name: 'id', description: 'id сертификата'})
     @ApiBody({type: UpdateCertificateDto, description: 'Сертификат'})
-    @ApiCreatedResponse({type: Certificate, description: 'Сертификат'})
+    @ApiCreatedResponse({type: UpdateDto, description: 'результат обновления'})
     @Put(':id')
     updateCertificate(
-        @Param('id') id: number,
+        @Param('id', ParseIntPipe) id: number,
         @Body() updateDto: UpdateCertificateDto,
     ) {
         return this.certificateService.updateCertificate(id, updateDto);
     }
 
     @ApiParam({name: 'id', description: 'id сертификата'})
+    @ApiCreatedResponse({type: DeleteDto, description: 'результат удаления'})
     @Delete(':id')
-    deleteCertificate(@Param('id') id: number) {
-        this.certificateService.deleteCertificate(id);
+    deleteCertificate(@Param('id', ParseIntPipe) id: number) {
+        return this.certificateService.deleteCertificate(id);
     }
 }

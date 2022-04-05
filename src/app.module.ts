@@ -6,13 +6,12 @@ import {Feedback} from './feedbacks/feedback.entity';
 import {DiscountModule} from './discounts/discount.module';
 import {ProductModule} from './products/product.module';
 import {Product} from './products/product.entity';
-import {Category} from './categories/category.entity';
 import {Property} from './properties/property.entity';
 import {SpecialistModule} from './specialists/specialist.module';
 import {Specialist} from './specialists/specialist.entity';
 import {Certificate} from './certificates/certificate.entity';
 import {CerificateModule} from './certificates/cerificate.module';
-import {CategoryModule} from './categories/category.module';
+
 import {PropertyModule} from './properties/property.module';
 
 @Module({
@@ -22,7 +21,6 @@ import {PropertyModule} from './properties/property.module';
         ProductModule,
         SpecialistModule,
         CerificateModule,
-        CategoryModule,
         PropertyModule,
         TypeOrmModule.forRoot({
             type: 'postgres',
@@ -35,9 +33,7 @@ import {PropertyModule} from './properties/property.module';
                 Discount,
                 Feedback,
                 Product,
-                Category,
                 Property,
-                Category,
                 Specialist,
                 Certificate,
             ],

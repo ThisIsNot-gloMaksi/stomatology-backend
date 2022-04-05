@@ -1,19 +1,22 @@
-import {Body, Injectable} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Specialist} from './specialist.entity';
 import {Repository} from 'typeorm';
 import {CreateSpecialistDto, UpdateSpecialistDto} from './specialist.dto';
+import {ControllerExceptions} from "../valid/controller.valid";
 
 @Injectable()
 export class SpecialistService {
     constructor(
         @InjectRepository(Specialist)
         private readonly specialistRepository: Repository<Specialist>,
+        private readonly controllerExceptions: ControllerExceptions
     ) {
     }
 
     getSimpleVersionSpecialists() {
         const result = this.specialistRepository.find();
+        this.controllerExceptions.notUndefinedPromise(result, 'specialists')
         return result.then((productList) => {
             return productList.map((it) => {
                 return {
@@ -26,14 +29,17 @@ export class SpecialistService {
     }
 
     getSpecialistById(id: number): Promise<Specialist> {
-        return this.specialistRepository
-            .createQueryBuilder('specialist')
-            .innerJoinAndSelect('specialists.certificates', 's')
-            .where('specialists.id=:id', {id: id})
-            .getOne();
+        return this.controllerExceptions.notUndefinedPromise(
+            this.specialistRepository
+                .createQueryBuilder('specialist')
+                .leftJoinAndSelect('specialist.certificates', 's')
+                .where('specialist.id=:id', {id: id})
+                .getOne(),
+            'specialist'
+        );
     }
 
-    createSpecialist(@Body() dto: CreateSpecialistDto) {
+    createSpecialist(dto: CreateSpecialistDto) {
         return this.specialistRepository.save(dto);
     }
 

@@ -1,19 +1,23 @@
-import {Body, Injectable, Param} from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Product} from './product.entity';
-import {Repository} from 'typeorm';
+import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 import {CreateProductDto, UpdateProductDto} from './product.dto';
+import {ControllerExceptions} from "../valid/controller.valid";
+
 
 @Injectable()
 export class ProductService {
     constructor(
         @InjectRepository(Product)
         private readonly productRepository: Repository<Product>,
+        private readonly controllerExceptions: ControllerExceptions
     ) {
     }
 
     getSimpleProduct() {
         const result = this.productRepository.find();
+        this.controllerExceptions.notUndefinedPromise(result, 'products');
         return result.then((productList) => {
             return productList.map((it) => {
                 return {
@@ -25,27 +29,27 @@ export class ProductService {
         });
     }
 
-    getProductById(id: number) {
-        return this.productRepository
-            .createQueryBuilder('product')
-            .innerJoinAndSelect('product.properties', 'p')
-            .innerJoinAndSelect('product.category', 'c')
-            .where('product.id=:id', {id: id})
-            .getOne();
+    getProductById(id: number): Promise<Product> {
+        return this.controllerExceptions.notUndefinedPromise(
+            this.productRepository
+                .createQueryBuilder('product')
+                .leftJoinAndSelect('product.property', 'p')
+                .where('product.id=:id', {id: id})
+                .getOne(),
+            'product'
+        );
     }
 
-    createProduct(@Body() product: CreateProductDto) {
+
+    createProduct(product: CreateProductDto): Promise<Product> {
         return this.productRepository.save(product);
     }
 
-    updateProductById(
-        @Param('id') id: number,
-        @Body() product: UpdateProductDto,
-    ) {
+    updateProductById(id: number, product: UpdateProductDto): Promise<UpdateResult> {
         return this.productRepository.update(id, product);
     }
 
-    deleteProductById(@Param('id') id: number) {
+    deleteProductById(id: number): Promise<DeleteResult> {
         return this.productRepository.delete(id);
     }
 }

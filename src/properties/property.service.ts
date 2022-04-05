@@ -4,6 +4,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Property} from './property.entity';
 import {Repository} from 'typeorm';
 import {ProductService} from '../products/product.service';
+import {ControllerExceptions} from "../valid/controller.valid";
 
 @Injectable()
 export class PropertyService {
@@ -11,17 +12,22 @@ export class PropertyService {
         @InjectRepository(Property)
         private readonly propertyRepository: Repository<Property>,
         private readonly productService: ProductService,
+        private readonly controllerExceptions: ControllerExceptions
     ) {
     }
 
     getPropertiesByProductId(productId: number) {
-        return this.productService
-            .getProductById(productId)
-            .then((it) => it.property);
+        return this.controllerExceptions.notUndefinedPromise(
+            this.productService
+                .getProductById(productId)
+                .then((it) => it.property),
+            'properties'
+        );
     }
 
     getPropertyById(id: number) {
-        return this.propertyRepository.findOne(id);
+        return this.controllerExceptions.notUndefinedPromise(this.propertyRepository.findOne(id),
+            'property');
     }
 
     createPropertyByProductId(productId: number, createDto: CreatePropertyDto) {

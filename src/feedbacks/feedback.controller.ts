@@ -1,8 +1,9 @@
-import {Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post} from '@nestjs/common';
 import {FeedbackService} from './feedback.service';
 import {CreateFeedbackDto} from './feedback.dto';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Feedback} from './feedback.entity';
+import {DeleteDto} from "../utils/result.dto";
 
 @ApiTags('feedbacks')
 @Controller('api/v1/feedbacks')
@@ -19,7 +20,7 @@ export class FeedbackController {
     @Get(':id')
     @ApiParam({name: 'id', description: 'id отзыва'})
     @ApiCreatedResponse({type: Feedback, description: 'Отзыв'})
-    getFeedbackById(@Param('id') id: number) {
+    getFeedbackById(@Param('id', ParseIntPipe) id: number) {
         return this.feedbackService.getFeedbackById(id);
     }
 
@@ -32,7 +33,8 @@ export class FeedbackController {
 
     @Delete(':id')
     @ApiParam({name: 'id', description: 'id отзыва'})
-    deleteById(@Param('id') id: number) {
+    @ApiCreatedResponse({type: DeleteDto, description: 'Результат удаления'})
+    deleteById(@Param('id', ParseIntPipe) id: number) {
         return this.feedbackService.deleteFeedbackById(id);
     }
 }
