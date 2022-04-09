@@ -3,7 +3,7 @@ import {DiscountService} from './discount.service';
 import {CreateDiscountDto, UpdateDiscountDto} from './discount.dto';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Discount} from './discount.entity';
-import {DeleteDto, UpdateDto} from "../utils/result.dto";
+import {DeleteDto, UpdateDto} from "../dto/result.dto";
 import {JwtAuthGuard} from "../auth/guard/jwt.guard";
 
 @Controller('api/v1/discounts')

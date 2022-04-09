@@ -27,9 +27,6 @@ export class CreateProductDto extends BaseProductDto {
     @IsNotEmpty()
     description: string;
 
-    @ApiProperty()
-    @IsNotEmpty()
-    category: string[];
 }
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {

@@ -1,6 +1,7 @@
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn,} from 'typeorm';
+import {Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn,} from 'typeorm';
 import {Property} from '../properties/property.entity';
 import {ApiProperty} from '@nestjs/swagger';
+import {Category} from "../categoryies/category.entity";
 
 @Entity()
 export class Product {
@@ -31,6 +32,7 @@ export class Product {
     property: Property[];
 
     @ApiProperty()
-    @Column('varchar', {array: true})
-    category: string[];
+    @ManyToMany(() => Category)
+    @JoinTable()
+    category: Category[];
 }

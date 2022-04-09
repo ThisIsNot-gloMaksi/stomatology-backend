@@ -3,7 +3,7 @@ import {FeedbackService} from './feedback.service';
 import {CreateFeedbackDto} from './feedback.dto';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Feedback} from './feedback.entity';
-import {DeleteDto} from "../utils/result.dto";
+import {DeleteDto} from "../dto/result.dto";
 
 @ApiTags('feedbacks')
 @Controller('api/v1/feedbacks')

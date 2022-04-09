@@ -1,9 +1,9 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards,} from '@nestjs/common';
 import {CreateProductDto, SimpleProductDto, UpdateProductDto,} from './product.dto';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Product} from './product.entity';
 import {ProductService} from './product.service';
-import {DeleteDto, UpdateDto} from "../utils/result.dto";
+import {DeleteDto, UpdateDto} from "../dto/result.dto";
 import {JwtAuthGuard} from "../auth/guard/jwt.guard";
 
 
@@ -36,6 +36,12 @@ export class ProductController {
     @Post()
     createProduct(@Body() product: CreateProductDto) {
         return this.productService.createProduct(product);
+    }
+
+    @Post(":productId")
+    joinToCategory(@Param('productId') productId: number,
+                   @Query('categoryId') categoryId: number) {
+        return this.productService.joinToCategory(categoryId, productId);
     }
 
     @UseGuards(JwtAuthGuard)

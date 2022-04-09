@@ -3,7 +3,7 @@ import {ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs
 import {CreatePropertyDto, UpdatePropertyDto} from './property.dto';
 import {PropertyService} from './property.service';
 import {Property} from './property.entity';
-import {UpdateDto} from "../utils/result.dto";
+import {UpdateDto} from "../dto/result.dto";
 import {JwtAuthGuard} from "../auth/guard/jwt.guard";
 
 @Controller('api/v1/properties')

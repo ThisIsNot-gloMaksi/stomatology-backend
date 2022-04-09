@@ -3,8 +3,8 @@ import {CreateCertificateDto, UpdateCertificateDto} from './certificate.dto';
 import {CertificateService} from './certificate.service';
 import {ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {Certificate} from './certificate.entity';
-import {DeleteDto, UpdateDto} from "../utils/result.dto";
 import {JwtAuthGuard} from "../auth/guard/jwt.guard";
+import {DeleteDto, UpdateDto} from "../dto/result.dto";
 
 @ApiTags('certificates')
 @Controller('api/v1/certificates')

@@ -4,6 +4,8 @@ import {Product} from './product.entity';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 import {CreateProductDto, UpdateProductDto} from './product.dto';
 import {ControllerExceptions} from "../valid/controller.valid";
+import {Category} from "../categoryies/category.entity";
+import {CategoryService} from "../categoryies/category.service";
 
 
 @Injectable()
@@ -11,7 +13,8 @@ export class ProductService {
     constructor(
         @InjectRepository(Product)
         private readonly productRepository: Repository<Product>,
-        private readonly controllerExceptions: ControllerExceptions
+        private readonly controllerExceptions: ControllerExceptions,
+        private readonly categoryService: CategoryService
     ) {
     }
 
@@ -33,6 +36,7 @@ export class ProductService {
             await this.productRepository
                 .createQueryBuilder('product')
                 .leftJoinAndSelect('product.property', 'p')
+                .leftJoinAndSelect('product.category', 'c')
                 .where('product.id=:id', {id: id})
                 .getOne(),
             'product'
@@ -50,5 +54,13 @@ export class ProductService {
 
     async deleteProductById(id: number): Promise<DeleteResult> {
         return await this.productRepository.delete(id);
+    }
+
+    async joinToCategory(categoryId: number, productId: number): Promise<Product> {
+        const category: Category = await this.categoryService.getCategoryById(categoryId);
+        const product: Product = await this.getProductById(productId);
+
+        product.category.push(category);
+        return await this.productRepository.save(product);
     }
 }

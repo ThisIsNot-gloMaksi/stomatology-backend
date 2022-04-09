@@ -3,7 +3,7 @@ import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {SpecialistService} from './specialist.service';
 import {CreateSpecialistDto, SimpleSpecialistDto, UpdateSpecialistDto,} from './specialist.dto';
 import {Specialist} from './specialist.entity';
-import {UpdateDto} from "../utils/result.dto";
+import {UpdateDto} from "../dto/result.dto";
 import {JwtAuthGuard} from "../auth/guard/jwt.guard";
 
 @Controller('api/v1/specialists')
