@@ -1,7 +1,7 @@
-import {Module} from "@nestjs/common";
+import {Module} from '@nestjs/common';
 
-import {FileController} from "./file.controller";
-import {MulterModule} from "@nestjs/platform-express";
+import {FileController} from './file.controller';
+import {MulterModule} from '@nestjs/platform-express';
 
 
 @Module({

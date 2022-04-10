@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards,} from '@nestjs/common';
 import {CreateProductDto, SimpleProductDto, UpdateProductDto,} from './product.dto';
-import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {Product} from './product.entity';
 import {ProductService} from './product.service';
 import {DeleteDto, UpdateDto} from "../dto/result.dto";
@@ -30,6 +30,7 @@ export class ProductController {
         return this.productService.getProductById(id);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiBody({type: CreateProductDto, description: 'услуга'})
     @ApiCreatedResponse({type: Product, description: 'услуга'})
@@ -38,12 +39,17 @@ export class ProductController {
         return this.productService.createProduct(product);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
+    @ApiParam({name: 'productId', description: 'id услуги'})
+    @ApiQuery({name: 'categoryId', description: 'id категории к которой нужно присоединить данный сервис'})
     @Post(":productId")
     joinToCategory(@Param('productId') productId: number,
                    @Query('categoryId') categoryId: number) {
         return this.productService.joinToCategory(categoryId, productId);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id услуги'})
     @ApiBody({type: CreateProductDto, description: 'услуга'})
@@ -56,6 +62,7 @@ export class ProductController {
         return this.productService.updateProductById(id, product);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiCreatedResponse({type: DeleteDto, description: 'результат удаления'})
     @Delete(':id')

@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards} from '@nestjs/common';
 import {FeedbackService} from './feedback.service';
 import {CreateFeedbackDto} from './feedback.dto';
-import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Feedback} from './feedback.entity';
-import {DeleteDto} from "../dto/result.dto";
+import {DeleteDto} from '../dto/result.dto';
+import {JwtAuthGuard} from '../auth/guard/jwt.guard';
 
 @ApiTags('feedbacks')
 @Controller('api/v1/feedbacks')
@@ -32,6 +33,8 @@ export class FeedbackController {
         return this.feedbackService.createFeedback(dto);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     @ApiParam({name: 'id', description: 'id отзыва'})
     @ApiCreatedResponse({type: DeleteDto, description: 'Результат удаления'})

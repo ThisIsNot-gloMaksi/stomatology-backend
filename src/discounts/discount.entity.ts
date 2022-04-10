@@ -25,5 +25,5 @@ export class Discount {
 
     @ApiProperty()
     @Column()
-    imageUrl: string;
+    imageName: string;
 }

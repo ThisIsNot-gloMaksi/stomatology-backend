@@ -4,8 +4,8 @@ import {SpecialistService} from '../specialists/specialist.service';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Certificate} from './certificate.entity';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
-import {ControllerExceptions} from "../valid/controller.valid";
-import {Specialist} from "../specialists/specialist.entity";
+import {ControllerExceptions} from '../valid/controller.valid';
+import {Specialist} from '../specialists/specialist.entity';
 
 @Injectable()
 export class CertificateService {

@@ -14,7 +14,7 @@ export class Certificate {
 
     @ApiProperty()
     @Column()
-    imageUrl: string;
+    imageName: string;
 
     @ManyToOne(() => Specialist)
     specialist: Specialist;

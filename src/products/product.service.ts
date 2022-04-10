@@ -3,9 +3,9 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Product} from './product.entity';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 import {CreateProductDto, UpdateProductDto} from './product.dto';
-import {ControllerExceptions} from "../valid/controller.valid";
-import {Category} from "../categoryies/category.entity";
-import {CategoryService} from "../categoryies/category.service";
+import {ControllerExceptions} from '../valid/controller.valid';
+import {Category} from '../categories/category.entity';
+import {CategoryService} from '../categories/category.service';
 
 
 @Injectable()

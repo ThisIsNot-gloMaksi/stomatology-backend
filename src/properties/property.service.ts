@@ -4,7 +4,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Property} from './property.entity';
 import {Repository} from 'typeorm';
 import {ProductService} from '../products/product.service';
-import {ControllerExceptions} from "../valid/controller.valid";
+import {ControllerExceptions} from '../valid/controller.valid';
 
 @Injectable()
 export class PropertyService {

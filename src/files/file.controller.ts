@@ -1,13 +1,17 @@
-import {Controller, Get, Param, Post, Res, UploadedFile, UseInterceptors} from '@nestjs/common';
-import {FileInterceptor} from "@nestjs/platform-express";
-import {diskStorage} from "multer";
-import {editFileName, imageFileFilter} from "../utils/file-upload.utils";
+import {Controller, Get, Param, Post, Res, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
+import {FileInterceptor} from '@nestjs/platform-express';
+import {diskStorage} from 'multer';
+import {editFileName, imageFileFilter} from '../utils/file-upload.utils';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {JwtAuthGuard} from '../auth/guard/jwt.guard';
 
-
+@ApiTags('files')
 @Controller('api/v1/files')
 export class FileController {
 
-    @Post("upload")
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
+    @Post('upload')
     @UseInterceptors(
         FileInterceptor('image', {
             storage: diskStorage({
@@ -25,7 +29,7 @@ export class FileController {
     }
 
     @Get(':img-path')
-    seeUploadedFile(@Param('img-path') image, @Res() res) {
+    getFile(@Param('img-path') image, @Res() res) {
         return res.sendFile(image, {root: './files'});
     }
 }

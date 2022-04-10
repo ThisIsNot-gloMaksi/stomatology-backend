@@ -3,8 +3,8 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {Product} from './product.entity';
 import {ProductController} from './product.controller';
 import {ProductService} from './product.service';
-import {ControllerExceptions} from "../valid/controller.valid";
-import {CategoryModule} from "../categoryies/category.module";
+import {ControllerExceptions} from '../valid/controller.valid';
+import {CategoryModule} from '../categories/category.module';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Product]), CategoryModule],

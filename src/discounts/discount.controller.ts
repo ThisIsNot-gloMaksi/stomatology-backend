@@ -1,10 +1,10 @@
 import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards,} from '@nestjs/common';
 import {DiscountService} from './discount.service';
 import {CreateDiscountDto, UpdateDiscountDto} from './discount.dto';
-import {ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiParam, ApiTags,} from '@nestjs/swagger';
 import {Discount} from './discount.entity';
-import {DeleteDto, UpdateDto} from "../dto/result.dto";
-import {JwtAuthGuard} from "../auth/guard/jwt.guard";
+import {DeleteDto, UpdateDto} from '../dto/result.dto';
+import {JwtAuthGuard} from '../auth/guard/jwt.guard';
 
 @Controller('api/v1/discounts')
 @ApiTags('discounts')
@@ -25,6 +25,7 @@ export class DiscountController {
         return this.discountService.getDiscountById(id);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiBody({type: CreateDiscountDto, description: 'акция'})
     @ApiCreatedResponse({type: Discount, isArray: true, description: 'акции'})
@@ -33,6 +34,7 @@ export class DiscountController {
         return this.discountService.createDiscount(dto);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiBody({type: UpdateDiscountDto, description: 'акция'})
     @ApiCreatedResponse({type: UpdateDto, isArray: true, description: 'результат обновления'})
@@ -41,6 +43,7 @@ export class DiscountController {
         return this.discountService.update(id, dto);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id акции'})
     @ApiCreatedResponse({type: DeleteDto, isArray: true, description: 'результат удаления'})

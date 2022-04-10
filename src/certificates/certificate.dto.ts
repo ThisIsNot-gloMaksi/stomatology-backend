@@ -10,7 +10,7 @@ export class CreateCertificateDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    imageUrl: string;
+    imageName: string;
 }
 
 export class UpdateCertificateDto extends PartialType(CreateCertificateDto) {

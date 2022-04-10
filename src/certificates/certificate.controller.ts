@@ -1,10 +1,10 @@
 import {Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards,} from '@nestjs/common';
 import {CreateCertificateDto, UpdateCertificateDto} from './certificate.dto';
 import {CertificateService} from './certificate.service';
-import {ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiParam, ApiQuery, ApiTags,} from '@nestjs/swagger';
 import {Certificate} from './certificate.entity';
-import {JwtAuthGuard} from "../auth/guard/jwt.guard";
-import {DeleteDto, UpdateDto} from "../dto/result.dto";
+import {JwtAuthGuard} from '../auth/guard/jwt.guard';
+import {DeleteDto, UpdateDto} from '../dto/result.dto';
 
 @ApiTags('certificates')
 @Controller('api/v1/certificates')
@@ -16,14 +16,14 @@ export class CertificateController {
     @ApiCreatedResponse({
         type: Certificate,
         isArray: true,
-        description: 'сертификат',
+        description: 'сертификаты',
     })
-
     @Get()
     getCertificates(@Query('specialistId', ParseIntPipe) specialistId: number) {
         return this.certificateService.getCertificates(specialistId);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiQuery({name: 'specialistId', description: 'Все сертификаты'})
     @ApiBody({type: CreateCertificateDto, description: 'Сертификат'})
@@ -36,6 +36,7 @@ export class CertificateController {
         return this.certificateService.createCertificate(specialistId, createDto);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id сертификата'})
     @ApiBody({type: UpdateCertificateDto, description: 'Сертификат'})
@@ -48,6 +49,7 @@ export class CertificateController {
         return this.certificateService.updateCertificate(id, updateDto);
     }
 
+    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @ApiParam({name: 'id', description: 'id сертификата'})
     @ApiCreatedResponse({type: DeleteDto, description: 'результат удаления'})

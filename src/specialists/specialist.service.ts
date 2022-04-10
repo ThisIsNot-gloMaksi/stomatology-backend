@@ -3,7 +3,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Specialist} from './specialist.entity';
 import {Repository} from 'typeorm';
 import {CreateSpecialistDto, UpdateSpecialistDto} from './specialist.dto';
-import {ControllerExceptions} from "../valid/controller.valid";
+import {ControllerExceptions} from '../valid/controller.valid';
 
 @Injectable()
 export class SpecialistService {
